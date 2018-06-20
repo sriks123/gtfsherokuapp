@@ -20,7 +20,16 @@ INSTALLED_APPS = [
     'rest_framework',
     'multigtfs',
     'rest_framework_swagger',
-]
+]DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': config('DB_NAME'),
+        'USER': config('DB_USER'),
+        'PASSWORD': config('DB_PASSWORD'),
+        'HOST': config('DB_HOST'),
+        'PORT': '',
+    }
+}
 DEBUG = config('DEBUG', default=False, cast=bool)
 DATABASES['default'] =  dj_database_url.config()
 DATABASES['default']['ENGINE'] = 'django.contrib.gis.db.backends.postgis'
