@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<osm version="0.6" generator="Overpass API 0.7.55.3 9da5e7ae">
+<note>The data included in this document is from www.openstreetmap.org. The data is made available under ODbL.</note>
+<meta osm_base="2018-06-20T07:48:02Z"/>
+
+  <node id="4440762069" lat="30.2560599" lon="-85.9615288" version="1" timestamp="2016-10-10T14:39:52Z" changeset="42778913" uid="349063" user="BertoUCF">
+    <tag k="bench" v="no"/>
+    <tag k="covered" v="no"/>
+    <tag k="highway" v="bus_stop"/>
+    <tag k="name" v="Front Beach Rd. &amp; Shasta Pl."/>
+    <tag k="operator" v="Bay Town Trolley"/>
+    <tag k="shelter" v="no"/>
+  </node>
+  <node id="4440762070" lat="30.2561144" lon="-85.9614079" version="1" timestamp="2016-10-10T14:39:53Z" changeset="42778913" uid="349063" user="BertoUCF">
+    <tag k="bench" v="no"/>
+    <tag k="covered" v="no"/>
+    <tag k="highway" v="bus_stop"/>
+    <tag k="name" v="Front Beach Rd. &amp; Shasta Pl."/>
+    <tag k="operator" v="Bay Town Trolley"/>
+    <tag k="shelter" v="no"/>
+  </node>
+
+</osm>

@@ -1,0 +1,150 @@
+html ,body {
+    height:100%;
+    width :100%;
+    background :white;
+}
+th{
+    font-weight:bold;
+}
+.widgets {
+    display: flex;
+    justify-content: space-around;
+}
+
+#query-textbox{
+    padding-top: 10px;
+    padding-left: 0px;
+}
+#query_label{
+    padding-top:15px;
+    font-size: 20px;
+}
+#feed_form {
+    border-radius: 25px;
+    border: 10px solid #2778D4;
+    padding: 20px;
+    width: 550px;
+    height: 500px;
+}
+#form_heading{
+    font-family: "Times New Roman", Times, serif
+}
+#box1{
+    display:block;
+    padding:10px;
+}
+#box2{
+    display:block;
+    padding:10px;
+}
+#load{
+    width:100%;
+    height:100%;
+    position:fixed;
+    z-index:9999;
+    background:url("https://www.creditmutuel.fr/cmne/fr/banques/webservices/nswr/images/loading.gif") no-repeat center center rgba(0,0,0,0.25)
+}
+#map {
+    width:100%;
+    height:400px;
+    padding-left:25px;
+    padding-top: 45px;
+}
+​table { border: none; border-collapse: collapse; }
+table td { border-left: 1px solid #000; padding:30px; }
+table td:first-child { border-left: none; }
+#info-div{
+    width:100%;
+    height:500px;
+    padding-left: 0px;
+    padding-top: 45px;
+    margin: 0;
+    border:0;
+}
+.information-box{
+    padding-left:10px;
+    padding :40px;
+}
+.information-box, .leaflet-container {
+    border-radius: 25px;
+    border: 10px solid #2778D4;
+    width:  600px;
+    height: 500px;
+}
+
+#specialbigmap {
+    height: 1000px;
+}
+#formname{
+    width:100%;
+    float:right;
+}
+#formurl{
+    width: 100%;
+    float:right;
+}
+#formosmtag{
+    width:100%;
+    float:right;
+}
+#formgtfstag{
+    width:100%;
+    float:right;
+}
+#formfrequency{
+    width:100%;
+    float:right;
+}
+.save{
+    padding-top:12px;
+    float:left;
+}
+label{
+    float:left;
+    margin-right:10px;
+    font-family: bold;
+}
+#status{
+    font-family:"Times New Roman", Times, serif;
+    box-shadow: 5px 5px 5px 5px;
+    padding:10px 10px 10px 10px;
+    background: #28CBA0;
+}
+#loading {width: 100%;height: 100%;top: 0px;left: 0px;position: fixed;display: block; z-index: 99}
+
+#loading-image {position: absolute;top: 40%;left: 45%;z-index: 100}
+
+#heading{
+    color:#4A524C;
+    font-weight:bold ;
+}
+#last-feed-box{
+ /* or whatever width you want. */
+   max-width:1000px;
+max-height:350px;
+   display: inline-block;
+    box-shadow: 5px 5px 5px 5px;
+    padding:10px 10px 10px 10px;
+    background: #ABEAF2;
+}
+#avail-feed-box{
+ /* or whatever width you want. */
+ overflow-y: auto;
+   max-width:1000px;
+max-height:350px;
+   display: inline-block;
+    box-shadow: 5px 5px 5px 5px;
+
+    background: #ABEAF2;
+}
+#feeds-box{
+background:#A29D9F;
+}
+#feeds-box:hover, #feeds-nox:focus{
+    background:#C8C0C3;
+}
+h3{
+font-style:italic;
+font-size:1.5em;
+color:green;
+}

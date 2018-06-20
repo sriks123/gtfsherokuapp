@@ -1,0 +1,257 @@
+{% extends 'gs/home.html' %}
+{% load staticfiles %}
+{% load static %}
+{% load leaflet_tags %}
+
+{% block map %}
+<div id="loading">
+    <img id="loading-image" src='http://i.stack.imgur.com/FhHRx.gif' alt="Loading..."/>
+</div>
+<br><br>
+<div class="container-fluid">
+    <div class="row">
+        <div class="cold-md-12">
+            <h2>You are working on {{context.feed_name}}</h2>
+            <h3>{{context.feed_download_status}}</h3>
+            <h3>{{context.error}}</h3>
+            <h3>{{context.connection_error}}</h3>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row widgets">
+        <div class="col-md-6">
+
+            <div id="info-div">
+                <div class="information-box">
+                    <table style="width:100%">
+                        <tr>
+                            <th>GTFS</th>
+                            <th>Result</th>
+                            <th>OSM</th>
+                        </tr>
+                        <tr>
+                            <td id="gtfsstopid"></td>
+                            <td id="resultstopid"></td>
+                            <td id="osmstopid"></td>
+                        </tr>
+                        <tr>
+                            <td id="gtfsstopcode"></td>
+                            <td>--------</td>
+                            <td>--------</td>
+                        </tr>
+                        <tr>
+                            <td id="gtfsstopname"></td>
+                            <td>--------</td>
+                            <td id="osmstopname"></td>
+                        </tr>
+                        
+                        <tr>
+                            <td id="gtfsstopzone"></td>
+                            <td>--------</td>
+                            <td id="osmstopversion"></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="map-box">
+                <div id="map">{% leaflet_map "osmmap" callback="loadmapfunction"%}</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    window.onload = function(){ document.getElementById("loading").style.display = "none" }
+
+    var feed_bounds;
+
+    function dividemapfunction(map,options){
+        L.marker([50.5, 30.5]).addTo(map);
+    }
+    function loadmapfunction(map, options){
+
+        feed_id = {{context.feed_id}}
+        console.log(feed_id)
+        var mapLayer;
+        var markerArray = [];
+        var stopscoordinates_array = [];
+        var gtfsstopsdata = '{% url "stopdata" %}';
+
+        $.ajaxSetup({
+            async: false
+        });
+
+        $.getJSON(gtfsstopsdata, function (data) {
+
+            var lon, lat;
+            var coordinates_arr = [];
+            var length = data.features.length;
+            for (var i = 0; i < length; i++) {
+                if (data.features[i].properties.feed == feed_id) {
+                    name = data.features[i].properties.name
+                    lon = data.features[i].geometry.coordinates[1];
+                    lat = data.features[i].geometry.coordinates[0];
+                    coordinates_arr = [lon, lat];
+                    stopscoordinates_array.push(coordinates_arr);
+                    var marker = L.marker(coordinates_arr).bindTooltip(name+",lat="+lat+",lon="+lon,{ 
+        direction: 'top'
+    }).on('click', markerOnClick).addTo(map);
+                    marker.stopid = data.features[i].properties.stop_id;
+                    marker.stopcode = data.features[i].properties.code;
+                    marker.stopzone = data.features[i].properties.zone;
+                    marker.stopname = name;
+
+                    function markerOnClick(e){
+                        $("#gtfsstopid").text(this.stopid);
+                        if(this.stopcode == ""){
+                            $("#gtfsstopcode").text("code undefined");    
+                        }else{
+                            $("#gtfsstopcode").text(this.stopcode);
+                        }
+                        $("#gtfsstopname").text(this.stopname);
+                        if(this.stopzone == null){
+                            $("#gtfsstopzone").text("zone undefined");    
+                        }else{
+                            $("#gtfsstopzone").text(this.stopzone);
+                        }
+                    }
+
+                    markerArray.push(marker);
+                }
+            }
+            console.log(markerArray);
+            var group = new L.featureGroup(markerArray);
+            var bounds = group.getBounds();
+            feed_bounds = bounds;
+            map.fitBounds(bounds);
+        });
+        function getCookie(name) {
+            var cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = jQuery.trim(cookies[i]);
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        var csrftoken = getCookie('csrftoken');
+
+        console.log(csrftoken);
+
+        function csrfSafeMethod(method) {
+            // these HTTP methods do not require CSRF protection
+            return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+        }
+        $.ajaxSetup({
+            beforeSend: function(xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            }
+        });
+
+        console.log(feed_bounds)
+
+        //0 = lon 1 =lat
+        var east_bound = feed_bounds.getEast();
+        var west_bound = feed_bounds.getWest();
+        var north_bound = feed_bounds.getNorth();
+        var south_bound = feed_bounds.getSouth();
+        var northeast_bound = [];
+        northeast_bound[0] = feed_bounds.getNorthEast().lng;
+        northeast_bound[1] = feed_bounds.getNorthEast().lat;
+        var northwest_bound = []
+        northwest_bound[0] = feed_bounds.getNorthWest().lng;
+        northwest_bound[1] = feed_bounds.getNorthWest().lat;
+        var southeast_bound = [];
+        southeast_bound[0] = feed_bounds.getSouthEast().lng;
+        southeast_bound[1] = feed_bounds.getSouthEast().lat;
+        var southwest_bound = [];
+        southwest_bound[0] = feed_bounds.getSouthWest().lng;
+        southwest_bound[1] = feed_bounds.getSouthWest().lat;
+        var URL = "{% url 'bounds' %}";
+        
+        ar = JSON.stringify(stopscoordinates_array)
+        $.ajax({
+           url:URL,
+           method:'POST',
+           async:false,
+           data: {'east':east_bound,
+               'west':west_bound,
+               'north':north_bound,
+               'south':south_bound,
+               'northeast_lon':northeast_bound[0],
+               'northeast_lat':northeast_bound[1],
+               'northwest_lon':northwest_bound[0],
+               'northwest_lat':northwest_bound[1],
+               'southeast_lon':southeast_bound[0],
+               'southeast_lat':southeast_bound[1],
+               'southwest_lon':southwest_bound[0],
+               'southwest_lat':southwest_bound[1],
+               'stopscoordinates_array':ar,
+               'csrfmiddlewaretoken': '{{ csrf_token }}'},
+           success: function(data){
+                alert("OpenStreetMap Data has been loaded loading stop on the map");
+
+           },
+           error : function(xhr,status,e){
+               alert("Something went wrong");
+           }
+        });
+
+
+        var nodedata = '{% url "osmnodedata" %}' ;
+
+        $.getJSON(nodedata, function(data){
+
+            var greenIcon = new L.Icon({
+              iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
+              shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+              iconSize: [25, 41],
+              iconAnchor: [12, 41],
+              popupAnchor: [1, -34],
+              shadowSize: [41, 41]
+            });
+            var lon, lat;
+            var coordinates_arr = [];
+            var length = data.features.length;
+            for (var i = 0; i < length; i++) {
+                    node_id=data.features[i].properties.id
+                    lon = data.features[i].geometry.coordinates[1];
+                    lat = data.features[i].geometry.coordinates[0];
+                    coordinates_arr = [lat, lon];
+                    var marker = L.marker(coordinates_arr, {icon:greenIcon}).bindTooltip(
+                        node_id+",lat="+lat+",lon="+lon,{
+                            direction:'top'
+                        }
+                        ).on('click', markerClick).addTo(map);
+                    marker.nodeid = node_id
+                    marker.nodeversion = data.features[i].properties.version
+                    function markerClick(e){
+                        $("#osmstopid").text(this.nodeid);
+                        $("#osmstopversion").text("version "+this.nodeversion);
+                    }
+
+            }
+        });
+
+
+      
+
+}
+
+</script>
+
+{% endblock %}
