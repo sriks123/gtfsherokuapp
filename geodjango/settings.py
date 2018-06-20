@@ -20,7 +20,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'multigtfs',
     'rest_framework_swagger',
-]DATABASES = {
+]
+DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': config('DB_NAME'),
