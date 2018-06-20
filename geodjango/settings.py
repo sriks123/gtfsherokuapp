@@ -2,6 +2,7 @@ import os
 import dj_database_url
 from decouple import config
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+SECRET_KEY = '5@ch@sqd_+(4eaj2h60qofszfhuuxk#h#f#ehyb&b+drp@v0&s'
 
 INSTALLED_APPS = [
     'django.contrib.admin',
