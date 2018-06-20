@@ -1,6 +1,5 @@
 import os
-from geodjango.settings_secret import *
-
+import dj_database_url
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 INSTALLED_APPS = [
@@ -20,6 +19,12 @@ INSTALLED_APPS = [
     'multigtfs',
     'rest_framework_swagger',
 ]
+DEBUG = config('DEBUG', default=False, cast=bool)
+DATABASES = {
+    'default': dj_database_url.config(
+        default=config('DATABASE_URL')
+    )
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -83,7 +88,7 @@ STATIC_URL = '/static/'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-
+STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
 STATICFILES_DIRS = (
     os.path.join(PROJECT_ROOT, 'static'),
     os.path.join(PROJECT_ROOT, 'gs', 'static'),
